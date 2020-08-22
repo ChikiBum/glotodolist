@@ -1,0 +1,76 @@
+"use strict";
+
+const todoControl = document.querySelector('.todo-control'),
+    headerInput = document.querySelector('.header-input'),
+    todoList = document.querySelector('.todo-list'),
+    todoCompleted = document.querySelector('.todo-completed');
+
+const toDoData = [
+    {
+        value: 'сварить кофе',
+        completed: false
+    },
+    {
+        value: 'помыть посуду',
+        completed: true
+    }
+
+];
+
+localStorage.setItem('сварить кофе', false);
+localStorage.setItem('помыть посуду', true);
+
+// console.log(localStorage.getItem('сварить кофе')); 
+// console.log(localStorage.key('сварить кофе')); 
+
+console.log(Object.keys(localStorage));
+console.log(Object.getOwnPropertyNames(localStorage));
+
+
+  let keys = Object.keys(localStorage);
+  for(let key of keys) {
+    console.log(`${key}: ${localStorage.getItem(key)}`);
+  }
+
+const render = function(){
+    todoList.textContent = '';
+    todoCompleted.textContent = '';
+
+    toDoData.forEach(function(item){
+        const li = document.createElement('li');
+        li.classList.add('todo-item');
+
+        li.innerHTML = '<span class="text-todo">' + item.value +'</span>' +
+        '<div class="todo-buttons">' + '<button class="todo-remove"></button>' +
+        '<button class="todo-complete"></button>' + '</div>';
+
+        if(item.completed){
+            todoCompleted.append(li);
+        } else  {
+            todoList.append(li);
+        }
+
+        const btnTodoComplete = li.querySelector('.todo-complete');
+
+        btnTodoComplete.addEventListener('click', function(){
+            item.completed = !item.completed;
+            render();
+        });
+    });
+};
+
+todoControl.addEventListener('submit', function(event){
+    event.preventDefault();
+
+    const newTodo = {
+        value: headerInput.value,
+        completed: false
+    };
+
+    toDoData.push(newTodo);
+
+    render();
+});
+
+render();
+
